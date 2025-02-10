@@ -2,12 +2,6 @@ streamlit
 openai
 pandas
 pandasql
+regex
 xlrd
-<<<<<<< HEAD
 aiosqlite
-regex
- 
-=======
-sqlite3
-regex
->>>>>>> ee22284d6ee5833b4a2a52f98af7437d52c648bd
