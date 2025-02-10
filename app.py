@@ -12,8 +12,8 @@
 import streamlit as st
 import openai
 import pandas as pd
-import sqlite3
 import pandasql as ps
+#import sqlite3
 
 def output_title(str):
     #print(str)
@@ -40,24 +40,24 @@ def load_excel_to_df(file_path):
 def execute_sql_query(df):
     try:
         # Создание базы данных SQLite в памяти (для простоты)
-        conn = sqlite3.connect(':memory:')
+#        conn = sqlite3.connect(':memory:')
         
         # Запись DataFrame в таблицу базы данных SQLite
-        df.to_sql('data', conn, if_exists='replace', index=False)
+#        df.to_sql('data', conn, if_exists='replace', index=False)
 
         # Выполнение SQL-запроса (например, выборка всех столбцов)
-        cursor = conn.cursor()
+#        cursor = conn.cursor()
         
         # Прочитаем все столбцы из DataFrame (теперь таблицы 'data')
-        columns = list(df.columns)
+#        columns = list(df.columns)
         
         query = f"SELECT * FROM data LIMIT 2"
-        cursor.execute(query)
+ #       cursor.execute(query)
         
-        rows = cursor.fetchall()
+#        rows = cursor.fetchall()
         
-        for row in rows:
-            output_str(row)  # Выводим результат
+#        for row in rows:
+#            output_str(row)  # Выводим результат
         
     except Exception as e:
         output_str(f"Ошибка при выполнении запроса: {e}")
