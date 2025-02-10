@@ -117,18 +117,22 @@ def main():
                     base_url="https://openrouter.ai/api/v1",
                     api_key=OPEN_KEY,
                 )
-                completion = client.chat.completions.create(
-                    extra_headers={
-                        "HTTP-Referer": "https://gsktb.com", # Optional. Site URL for rankings on openrouter.ai.
-                        "X-Title": "https://gsktb.com", # Optional. Site title for rankings on openrouter.ai.
-                    },
-                    extra_body={},
-                    model="deepseek/deepseek-r1:free",
-                    messages=[{
-                        "role": "user",
-                        "content": user_query
-                    }]
-                )
+                try:
+                    completion = client.chat.completions.create(
+                        extra_headers={
+                            "HTTP-Referer": "https://gsktb.com", # Optional. Site URL for rankings on openrouter.ai.
+                            "X-Title": "https://gsktb.com", # Optional. Site title for rankings on openrouter.ai.
+                        },
+                        extra_body={},
+                        model="deepseek/deepseek-r1:free",
+                        messages=[{
+                            "role": "user",
+                            "content": user_query
+                        }]
+                    )
+                except Exception as e:
+                    output_str(f"Ошибка при выполнении запроса: {e}")
+                    
                 sql_query = extract_substring_regex(completion.choices[0].message.content)
             
             output_str(f"SQL: {sql_query}")
