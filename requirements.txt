@@ -3,5 +3,6 @@ openai
 pandas
 pandasql
 xlrd
-pysqlite3
+aiosqlite
 regex
+ 

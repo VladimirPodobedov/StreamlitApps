@@ -79,20 +79,22 @@ def execute_sql_query(df):
 def main():
 
     # Создание интерфейса для выбора файла
-    #file_path = input("Введите путь к вашему Excel-файлу (.xlsx): ")
     output_title("Natural language SQL")
-    #file_rules  = st.file_uploader("Select the rule file (xls)", type=['xls'])
-    #file_data = st.file_uploader("Select the data file (xls)", type=['xls'])
     
-    file_rules = get_excel_file("Select the rule file", 'xls')
+#    file_rules = get_excel_file("Select the rule file", 'xls')
     file_data = get_excel_file("Select the data file", 'xls')    
     
     conditions = st.text_input("Write conditions here")
+    if conditions[-1:] != '.':
+        conditions = conditions + '.'
+        
     question = st.text_input("Write the query string here")
+    if question[-1:] != '?':
+        question = question + '?'
     
     if st.button(" RUN "):
     
-        df1 = load_excel_to_df(file_rules)
+#        df1 = load_excel_to_df(file_rules)
         df = load_excel_to_df(file_data)
         if df is not None:
         
@@ -111,7 +113,7 @@ def main():
                 
                 client = OpenAI(
                     base_url="https://openrouter.ai/api/v1",
-                    api_key="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",
+                    api_key="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",
                 )
                 completion = client.chat.completions.create(
                     extra_headers={
