@@ -16,7 +16,7 @@ import sqlite3
 import re
 
 
-OPEN_KEY = "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"
+OPEN_KEY = "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"
 
 fields = "name, price"
 conditions = "Если говорю моя машина, то имей в виду Porsсhe."
