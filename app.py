@@ -16,6 +16,8 @@ import sqlite3
 import re
 
 
+OPEN_KEY = "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"
+
 fields = "name, price"
 conditions = "Если говорю моя машина, то имей в виду Porsсhe."
 question = "сколько стоит моя машина"
@@ -113,7 +115,7 @@ def main():
                 
                 client = OpenAI(
                     base_url="https://openrouter.ai/api/v1",
-                    api_key="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",
+                    api_key=OPEN_KEY,
                 )
                 completion = client.chat.completions.create(
                     extra_headers={
