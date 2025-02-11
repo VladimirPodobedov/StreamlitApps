@@ -72,7 +72,7 @@ def ai_groq_get_query(user_query_string):
 
     except Exception as e:
 
-        UI_output_str(f"Ошибка обращения к GPT: {e}")
+        st.error(f"Ошибка обращения к GPT: {e}")
         return None
 
 #------------------------------------------------------------------------------
@@ -82,41 +82,52 @@ def load_excel_to_df(file_path):
         # Загрузка данных из Excel-файла
         df = pd.read_excel(file_path)
         return df
+    
     except Exception as e:
-        UI_output_str(f"Ошибка при загрузке файла: {e}")
+        st.error(f"Ошибка при загрузке файла: {e}")
         return None
 
 
 # Основная функция программы
 def main():
-
-    # Создание интерфейса для выбора файла
+    user_query = ''
+    sql_query_string = ''
+    sql_result = ''
+    
     UI_create_title("Natural language SQL")
-    #file_rules = UI_get_excel_file("Select the rule file", 'xls')
-    file_data = UI_get_excel_file("Select the data file", 'xls')    
-    conditions = add_last_char_if_needed(st.text_input("Write conditions here"),'.')
-    question = add_last_char_if_needed(st.text_input("Write the query string here"),'?')
-    
-    if st.button(" RUN "):
-    
-        #df1 = load_excel_to_df(file_rules)
-        df = load_excel_to_df(file_data)
-        if df is not None:
-      
-            fields = ', '.join(list(df.columns))
+    with st.form("my_form"):
+        #st.subheader("This is a subheader")
+        #file_rules = UI_get_excel_file("Select the rule file", 'xls')
+        file_data = UI_get_excel_file("Select the data file", 'xls')    
+        conditions = add_last_char_if_needed(st.text_input("Write conditions here"),'.')
+        question = add_last_char_if_needed(st.text_input("Write the query string here"),'?')
+        show_sql = st.checkbox("show query")
         
-            if not question:
-                sql_query = """SELECT * FROM df """
-            else:
-                user_query = "Show only SQL. The table df has columns: "+fields+". "+conditions +" "+ question
-                UI_output_str(user_query)
-                sql_query = extract_substring_regex(ai_groq_get_query(user_query))
-            
-            if sql_query is not None:
+        if st.form_submit_button(f":red[ RUN ]"):
+        
+            #df1 = load_excel_to_df(file_rules)
+            df = load_excel_to_df(file_data)
+            if df is not None:
 
-                UI_output_str(f"SQL: {sql_query}")
-                UI_output_str(ps.sqldf(sql_query, locals()))
+                fields = ', '.join(list(df.columns))
 
+                if not question:
+                    sql_query = """SELECT * FROM df """
+                else:
+                    user_query = "Show only SQL. The table df has columns: "+fields+". "+conditions +" "+ question
+                    #UI_output_str(user_query)
+                    sql_query = extract_substring_regex(ai_groq_get_query(user_query))
+                
+                if sql_query is not None:
+                    sql_query_string = f"SQL: {sql_query}"
+                    sql_result = ps.sqldf(sql_query, locals())
+
+    
+    if user_query or sql_query_string:
+        if show_sql:
+            UI_output_str(user_query)
+            UI_output_str(sql_query_string)
+        UI_output_str(sql_result)
             
 if __name__ == "__main__":
     main()
