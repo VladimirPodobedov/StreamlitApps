@@ -137,7 +137,28 @@ def main():
     sql_result = ''
     
     ui.title("Natural language SQL")
-    with ui.form("my_form"):
+    with ui.form("my_form"): 
+        option = st.selectbox("Select an AI assistant model:",
+                (
+                    'gemma2-9b-it',
+                    'deepseek-r1-distill-llama-70b',
+                    'deepseek-r1-distill-qwen-32b',
+                    'llama-3.1-8b-instant',
+                    'llama-3.2-11b-vision-preview',
+                    'llama-3.2-1b-preview',
+                    'llama-3.2-3b-preview',
+                    'llama-3.2-90b-vision-preview',
+                    'llama-3.3-70b-specdec',
+                    'llama-3.3-70b-versatile',
+                    'llama-guard-3-8b',
+                    'llama3-70b-8192',
+                    'llama3-8b-8192',
+                    'mixtral-8x7b-32768',
+                    'qwen-2.5-32b'                
+                ),
+        )
+
+
         file_data = ui.file("Select the data file", 'xls')    
         conditions = ui.input_with("Used rules:",'.')
         question = ui.input_with("Your question:",'?')
@@ -156,7 +177,7 @@ def main():
                 if not question:
                     sql = """SELECT * FROM df """
                 else:
-                    user_query = conditions + "The table df has columns: " + xls.fields_string(df) +". "+" "+ question + " Show only SQL."
+                    user_query = f"""{conditions} The table df has columns: {xls.fields_string(df)}. {question} Show only SQL."""
                     
                     user_query1 = f"""
 
@@ -177,6 +198,11 @@ def main():
                     """
                     ai = AI()
                     sql = ai.get_answer(user_query)
+                    sql = sql.replace('!=', '<>')
+                    #sql = sql.replace("'", '`')
+                    
+                    
+                    #sql = "SELECT name_of_car FROM df WHERE name_of_car <> 'Porsche' ORDER BY price ASC LIMIT 1"
                     
                     if (error := ai.error_code()) is not None:
                         ui.error(f"GPT access error: {error}")
