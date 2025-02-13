@@ -84,7 +84,13 @@ class TableXls:
         
     def execute_sql(self, df, str):
         return ps.sqldf(str, locals())
-        
+
+    def sql_normalize(self, sql):
+        sql = sql.replace('!=', '<>')
+        sql = sql.replace("'", '"')
+        sql = sql.replace(";", '')
+        return sql
+
         
 class AI:
 
@@ -138,7 +144,7 @@ def main():
     
     ui.title("Natural language SQL")
     with ui.form("my_form"): 
-        option = st.selectbox("Select an AI assistant model:",
+        ai_model = st.selectbox("Select an AI assistant model:",
                 (
                     'gemma2-9b-it',
                     'deepseek-r1-distill-llama-70b',
@@ -177,9 +183,9 @@ def main():
                 if not question:
                     sql = """SELECT * FROM df """
                 else:
-                    user_query = f"""{conditions} The table df has columns: {xls.fields_string(df)}. {question} Show only SQL."""
+                    user_query = f"""{conditions} The table df has columns: {xls.fields_string(df)}. {question} Show only SQL in SQLite syntax."""
                     
-                    user_query1 = f"""
+                    user_query_template = f"""
 
                     	My car is Porsche. 
 	
@@ -197,9 +203,9 @@ def main():
                         Show only SQL.
                     """
                     ai = AI()
+                    ai.set_model(ai_model)
                     sql = ai.get_answer(user_query)
-                    sql = sql.replace('!=', '<>')
-                    #sql = sql.replace("'", '`')
+                    sql = xls.sql_normalize(sql)
                     
                     
                     #sql = "SELECT name_of_car FROM df WHERE name_of_car <> 'Porsche' ORDER BY price ASC LIMIT 1"
