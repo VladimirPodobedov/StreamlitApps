@@ -20,6 +20,12 @@ class Lib:
         return str
 
     @staticmethod    
+    def add_last_char_if_needed_qm(str,ch):
+        if str and (str[-1:] != ch) and (str[-1:] != '?'):
+            str = str + ch
+        return str
+
+    @staticmethod    
     def list_normalize(list_src, symbols_to_replace, char_for_replace):
         
         # Создаем таблицу замен
